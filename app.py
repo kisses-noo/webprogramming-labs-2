@@ -2,6 +2,7 @@ from flask import Flask
 app = Flask(__name__)
 
 @app.route("/")
+@app.route("/index")
 def start():
     return """
 <!DOCTYPE html>
@@ -19,7 +20,7 @@ def start():
         <h1>web-сервер на flask</h1>
 
         <footer>
-            &copy; Алина Андреичева, ФБИ-23, 2 курс, 2023
+            &copy; Алина Андреичева, ФБИ-23, 2 курс, 2023 
         </footer>
         
     </body>
