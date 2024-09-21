@@ -178,4 +178,7 @@ def mfg():
 @app.route("/lab2/example")
 def example():
     name = 'Алина Андреичева'
-    return render_template('example.html', name=name)
+    course = '2 курс'
+    laba = 'Лабораторная работа 2'
+    group = 'ФБИ-23'
+    return render_template('example.html', name=name, course=course, laba=laba, group=group)
