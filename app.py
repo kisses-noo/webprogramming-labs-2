@@ -202,3 +202,7 @@ def example():
         {'author': 'Тургенев Иван', 'name': 'Отцы и дети', 'genre': 'Роман', 'str': '280'}
     ]
     return render_template('example.html', name=name, course=course, laba=laba, group=group, fruits=fruits, books = books)
+
+@app.route('/lab2/')
+def lab2():
+    return render_template('lab2.html')
