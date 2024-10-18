@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 3{% endblock %}
+{% block main %}
+    <hl>Оформление билета</hl>
+
+    <form action="/lab3/ticket1">
+        <label for="fio">ФИО:</label>
+        <input type="text" name="fio" required>
+    
+        <label for="shelf">Полка:</label>
+        <select name="shelf" required>
+            <option value="lower">Нижняя</option>
+            <option value="upper">Верхняя</option>
+            <option value="upper_side">Верхняя боковая</option>
+            <option value="lower_side">Нижняя боковая</option>
+        </select>
+    
+        <label for="bedding">С бельём:</label>
+        <input type="checkbox" name="bedding">
+    
+        <label for="luggage">С багажом:</label>
+        <input type="checkbox" name="luggage">
+    
+        <label for="age">Возраст:</label>
+        <input type="number" name="age" min="1" max="120" required>
+    
+        <label for="departure">Пункт выезда:</label>
+        <input type="text" name="departure" required>
+    
+        <label for="destination">Пункт назначения:</label>
+        <input type="text" name="destination" required>
+    
+        <label for="date">Дата поездки:</label>
+        <input type="date" name="date" required>
+    
+        <label for="insurance">Нужна ли страховка:</label>
+        <input type="checkbox" name="insurance">
+    
+        <button type="submit">Получить билет</button>
+    </form>    
+{% endblock %}
