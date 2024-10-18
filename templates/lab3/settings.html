@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 3{% endblock %}
+{% block main %}
+    <h1>Настройки отображения</h1>
+    <form>
+        <div>
+            <label class="label" for="color">Выберите цвет текста:</label>
+            <input type="color" id="color" name="color" value="{{ color or '' }}">
+        </div>
+        <div>
+            <label class="label" for="bg_color">Выберите цвет фона:</label>
+            <input type="color" id="bg_color" name="bg_color" value="{{ bg_color or '' }}">
+        </div>
+        <div>
+            <label class="label" for="font_size">Выберите размер шрифта:</label>
+            <input type="number" id="font_size" name="font_size" value="{{ font_size or '' }}" min="10" max="100"> px
+        </div>
+        <div>
+            <label class="label" for="font_family">Выберите шрифт:</label>
+            <select id="font_family" name="font_family">
+                <option value="">--Выберите--</option>
+                <option value="Arial" {% if font_family == 'Arial' %}selected{% endif %}>Arial</option>
+                <option value="Courier New" {% if font_family == 'Courier New' %}selected{% endif %}>Courier New</option>
+                <option value="Georgia" {% if font_family == 'Georgia' %}selected{% endif %}>Georgia</option>
+                <option value="Times New Roman" {% if font_family == 'Times New Roman' %}selected{% endif %}>Times New Roman</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">OK</button>
+        </div>
+    </form>
+{% endblock %}

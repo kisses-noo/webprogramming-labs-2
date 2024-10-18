@@ -55,12 +55,12 @@ def oak():
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="stylesheet" href="''' + url_for('static', filename='lab1.css') + '''">
+    <link rel="stylesheet" href="''' + url_for('static', filename='lab1/lab1.css') + '''">
     <title>Дуб</title>
 </head>
     <body>
         <h1>Дуб</h1>
-        <img src="''' + url_for('static', filename='oak.jpg') + '''">
+        <img src="''' + url_for('static', filename='lab1/oak.jpg') + '''">
     </body>
 </html>
 '''
@@ -72,12 +72,12 @@ def student():
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1.css') + '''">
+    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1/lab1.css') + '''">
     <title>Студент</title>
 </head>
 <body>
     <h1>Андреичева Алина Георгиевна</h1>
-    <img src="''' + url_for('static', filename='ngtu_logo.jpg') + '''" alt="Логотип НГТУ">
+    <img src="''' + url_for('static', filename='lab1/ngtu_logo.jpg') + '''" alt="Логотип НГТУ">
 </body>
 </html>
 '''
@@ -89,7 +89,7 @@ def python_info():
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1.css') + '''">
+    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1/lab1.css') + '''">
     <title>Python</title>
 </head>
 <body>
@@ -111,7 +111,7 @@ def python_info():
     автоматическое управление памятью, полную интроспекцию и механизм обработки исключений. Также поддерживается 
     многопоточность с глобальной блокировкой интерпретатора (GIL) и высокоуровневые структуры данных. Программы могут 
     быть разбиты на модули, которые могут объединяться в пакеты.</p>
-    <img src="''' + url_for('static', filename='python.png') + '''" alt="Программирование на Python">
+    <img src="''' + url_for('static', filename='lab1/python.png') + '''" alt="Программирование на Python">
 </body>
 </html>
 '''
@@ -123,7 +123,7 @@ def mfg():
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1.css') + '''">
+    <link rel="stylesheet" type="text/css" href="''' + url_for('static', filename='lab1/lab1.css') + '''">
     <title>Melon Fashion Group</title>
 </head>
 <body>
@@ -140,7 +140,7 @@ def mfg():
     <p>Произошедшая в 2005 году перезагрузка «Первомайской Зари» открыла России новое имя в fashion-индустрии, 
     ставшее крупнейшей компанией и ведущим игроком на рынке России и стран СНГ, предлагающим высококачественный 
     продукт и сервис для своих клиентов. Так появилась компания Melon Fashion Group.</p>
-    <img src="''' + url_for('static', filename='mfg.jpg') + '''" alt="Программирование на Python">
+    <img src="''' + url_for('static', filename='lab1/mfg.jpg') + '''" alt="Программирование на Python">
 </body>
 </html>
 '''

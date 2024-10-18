@@ -13,7 +13,7 @@ def cookie():
     resp = make_response(redirect('/lab3'))
     resp.set_cookie('name', 'Alex', max_age=5)
     resp.set_cookie('age', '20')
-    resp.set_cookie('name_color', 'magenta')
+    resp.set_cookie('name_color', 'black')
     return resp
 
 @lab3.route('/lab3/del_cookie')
@@ -62,3 +62,33 @@ def pay():
 def success():
     price = request.args.get('price', type=int)
     return render_template('/lab3/success.html', price=price)
+
+@lab3.route('/lab3/settings')
+def settings():
+    color = request.args.get('color')
+    bg_color = request.args.get('bg_color')
+    font_size = request.args.get('font_size')
+    font_family = request.args.get('font_family')
+
+    resp = make_response(redirect('/lab3/settings'))
+
+    if color:
+        resp.set_cookie('color', color)
+    if bg_color:
+        resp.set_cookie('bg_color', bg_color)
+    if font_size:
+        resp.set_cookie('font_size', font_size)
+    if font_family:
+        resp.set_cookie('font_family', font_family)
+        return resp
+
+    # Получаем значения из cookies для отображения
+    color = request.cookies.get('color')
+    bg_color = request.cookies.get('bg_color')
+    font_size = request.cookies.get('font_size')
+    font_family = request.cookies.get('font_family')
+
+    resp = make_response(render_template('lab3/settings.html', color=color, bg_color=bg_color, font_size=font_size, font_family=font_family)) 
+    return resp
+
+
