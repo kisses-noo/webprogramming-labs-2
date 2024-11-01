@@ -195,3 +195,46 @@ def fridge():
                 message = "Ошибка: неверный формат температуры"
 
     return render_template('lab4/fridge.html', message=message)
+
+# Цены на зерно
+grain_prices = {
+    'ячмень': 12345,
+    'овёс': 8522,
+    'пшеница': 8722,
+    'рожь': 14111
+}
+
+@lab4.route('/lab4/order_grain', methods=['GET', 'POST'])
+def order_grain():
+    message = ""
+    if request.method == 'POST':
+        grain_type = request.form.get('grain_type')
+        weight = request.form.get('weight')
+
+        if not weight or float(weight) <= 0:
+            message = "Ошибка: вес должен быть указан и быть больше 0."
+        else:
+            weight = float(weight)
+
+            if weight > 500:
+                message = "Ошибка: такого объёма сейчас нет в наличии."
+                
+            else:
+                price_per_ton = grain_prices.get(grain_type)
+                if price_per_ton is None:
+                    message = "Ошибка: не выбран тип зерна."
+                else:
+                    total_price = price_per_ton * weight
+                    discount = 0
+
+                    if weight > 50:
+                        discount = total_price * 0.10  # 10% скидка
+                        total_price -= discount
+                        discount_message = f"Применена скидка за большой объём. Скидка: {discount:.2f} руб."
+                    else:
+                        discount_message = ""
+
+                    message = f"Заказ успешно сформирован. Вы заказали {grain_type}. 
+                    Вес: {weight:.2f} т. Сумма к оплате: {total_price:.2f} руб. {discount_message}"
+
+    return render_template('lab4/order_grain.html', message=message)
