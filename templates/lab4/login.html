@@ -3,6 +3,11 @@
 {% block main %}
     {% if authorized %}
         <hl>Добро пожаловать, {{ login }}!</h1>
+        <div>
+            <form action="/lab4/logout" method="post">
+                <button>Выход</button>
+            </form>
+        </div>
     {% else %}
         <h1>Вход</h1>
         <h2>Пожалуйста, авторизуйтесь</h2>
