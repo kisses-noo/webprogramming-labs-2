@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 4{% endblock %}
+{% block main %}
+    <div style="text-align: center;">
+        <h1>Редактирование данных</h1>
+        <form method="post" action="/lab4/edit_user">
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" value="{{ user.name }}"><br><br>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" placeholder="Оставьте пустым, чтобы не менять"><br><br>
+
+            <button type="submit">Сохранить изменения</button>
+        </form>
+    </div>
+{% endblock %}

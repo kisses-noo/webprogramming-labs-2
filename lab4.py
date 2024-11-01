@@ -132,40 +132,97 @@ def login():
         if 'login' in session:
             authorized = True
             login = session['login']
-            # Получаем имя пользователя из session
-            name = session.get('name', '')  # По умолчанию имя пустое, если не установлено
+            name = session.get('name', '')
         else:
             authorized = False
             login = ''
             name = ''
         return render_template('lab4/login.html', authorized=authorized, login=login, name=name)
-     
+    
     login = request.form.get('login')
     password = request.form.get('password')
-    
-    # Проверка на пустые поля
+
     if not login:
         error = 'Не введён логин'
-        return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')  # пароль остается пустым
-    
+        return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')
+
     if not password:
         error = 'Не введён пароль'
-        return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')  # пароль остается пустым
-    
+        return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')
+
     for user in users:
         if login == user['login'] and password == user['password']:
             session['login'] = login
-            session['name'] = user['name']  # Сохраняем имя в сессии
+            session['name'] = user['name']
             return redirect('/lab4/login')
-    
-    error = 'Неверные логин и/или пароль'
-    return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')  # пароль остается пустым
 
-@lab4.route('/lab4/logout', methods = ['POST'])
+    error = 'Неверные логин и/или пароль'
+    return render_template('lab4/login.html', error=error, authorized=False, login=login, password='')
+
+@lab4.route('/lab4/logout', methods=['POST'])
 def logout():
     session.pop('login', None)
-    session.pop('name', None)  # Удаляем имя из сессии
+    session.pop('name', None)
     return redirect('/lab4/login')
+
+@lab4.route('/lab4/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        name = request.form.get('name')
+
+        # Проверка на уникальность логина
+        if any(user['login'] == login for user in users):
+            return render_template('lab4/register.html', error='Данный логин уже занят.')
+
+        if not login or not password or not name:
+            return render_template('lab4/register.html', error='Все поля должны быть заполнены.')
+        
+        users.append({'login': login, 'password': password, 'name': name, 'gender': ''})
+        return redirect('/lab4/login')
+
+    return render_template('lab4/register.html')
+
+@lab4.route('/lab4/users', methods=['GET'])
+def users_list():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+    
+    return render_template('lab4/users.html', users=users)
+
+@lab4.route('/lab4/delete_user', methods=['POST'])
+def delete_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    current_user = session['login']
+    global users
+    users = [user for user in users if user['login'] != current_user]
+    session.clear()  # Удаляем сессию пользователя
+    return redirect('/lab4/login')
+
+@lab4.route('/lab4/edit_user', methods=['GET', 'POST'])
+def edit_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    current_user = session['login']
+    current_user_data = next((user for user in users if user['login'] == current_user), None)
+
+    if request.method == 'POST':
+        new_name = request.form.get('name')
+        new_password = request.form.get('password')
+
+        if new_name:
+            current_user_data['name'] = new_name
+        if new_password:
+            current_user_data['password'] = new_password
+
+        return redirect('/lab4/users')
+
+    return render_template('lab4/edit_user.html', user=current_user_data)
+
 
 @lab4.route('/lab4/fridge', methods=['GET', 'POST'])
 def fridge():
@@ -234,7 +291,6 @@ def order_grain():
                     else:
                         discount_message = ""
 
-                    message = f"Заказ успешно сформирован. Вы заказали {grain_type}. 
-                    Вес: {weight:.2f} т. Сумма к оплате: {total_price:.2f} руб. {discount_message}"
+                    message = f"Заказ успешно сформирован. Вы заказали {grain_type} Вес: {weight:.2f} т. Сумма к оплате: {total_price:.2f} руб. {discount_message}"
 
     return render_template('lab4/order_grain.html', message=message)
