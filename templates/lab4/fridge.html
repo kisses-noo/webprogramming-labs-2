@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block lab %}Лабораторная работа 4{% endblock %}
+{% block main %}
+    <div style="text-align: center;">
+        <h1>Холодильник</h1>
+        <form method="post">
+            <label for="temperature">Введите температуру (°C): </label>
+            <input type="text" id="temperature" name="temperature">
+            <button type="submit">Установить</button>
+        </form>
+        <div style="color: blue; font-weight: bold;">
+            {% if message %}
+                {{ message }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
