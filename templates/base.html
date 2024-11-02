@@ -20,6 +20,7 @@
                 font-family: {{ request.cookies.get('font_family') }};
                 {% endif %}
             }
+            {% block style %}{% endblock %}
         </style>
 
     </head>
