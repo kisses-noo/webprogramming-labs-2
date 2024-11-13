@@ -46,7 +46,7 @@
     <div class="container">
         <h1>База знаний</h1>
     </div>
-    <p class="username">Пользователь: <span style = "color: black">anonymous</span></p>
+    <p class="username">Пользователь: <span style = "color: black">{{ login if login else 'anonymous' }}</span></p>
     <div class="button-container">
         <ol class="button-list">
             <li class="button-item">
