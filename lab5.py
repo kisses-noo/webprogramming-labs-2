@@ -58,7 +58,7 @@ def login():
     
     conn, cur = db_connect()
     
-    cur.execute(f"SELECT * FROM users WHERE login='{login}';")
+    cur.execute("SELECT * FROM users WHERE login=%s;", (login, ))
     user = cur.fetchone()
     
     if not user:
