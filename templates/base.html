@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Андреичева Алина. {% block laba %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='lab1/main.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <style>
             body{
                 {% if request.cookies.get('color') %}

@@ -3,11 +3,16 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-
     <h1>Статьи</h1>
+    {% if message %}
+        <div style="color: red;">{{ message }}</div>
+    {% endif %}
+
     {% for article in articles %}
         <h2>{{ article['title'] }}</h2>
-        <blockquote>{{ article['article_text'] }}</blockquote> 
+        <blockquote>{{ article['article_text'] }}</blockquote>
+        <a href="/lab5/edit/{{ article['id'] }}">Редактировать</a> |
+        <a href="/lab5/delete/{{ article['id'] }}">Удалить</a>
     {% endfor %}
-
+    <a href="/lab5">Перейти к базе данных</a>
 {% endblock %}

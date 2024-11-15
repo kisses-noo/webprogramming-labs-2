@@ -46,12 +46,17 @@
     <div class="container">
         <h1>База знаний</h1>
     </div>
-    <p class="username">Пользователь: <span style = "color: black">{{ login if login else 'anonymous' }}</span></p>
+    <p class="username">Пользователь: <span style="color: black">{{ login if login else 'anonymous' }}</span></p>
     <div class="button-container">
         <ol class="button-list">
             <li class="button-item">
                 <a href="/lab5/login" class="button-link">Вход</a>
             </li>
+            {% if login %}
+            <li class="button-item">
+                <a href="/lab5/logout" class="button-link">Выход</a>
+            </li>
+            {% endif %} 
             <li class="button-item">
                 <a href="/lab5/register" class="button-link">Регистрация</a>
             </li>

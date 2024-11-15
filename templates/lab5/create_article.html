@@ -2,7 +2,9 @@
 {% block lab %}Лабораторная работа 5{% endblock %}
 {% block main %}
     <h1>Создание статьи</h1>
-
+    {% if error %}
+        <div style="color: red;">{{ error }}</div>
+    {% endif %}
     <form method="post">
         <div>
             <label>
@@ -17,6 +19,8 @@
         <div>
             <button type="submit">Готово</button>
         </div>
+        
     </form>
+    <a href="/lab5">Перейти к базе данных</a>
 
 {% endblock %}
