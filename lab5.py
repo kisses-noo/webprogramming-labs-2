@@ -123,7 +123,10 @@ def create():
         db_close(conn, cur)
         return redirect('/lab5/login')
     
-    cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", (user_id, title, article_text))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", (user_id, title, article_text))
+    else:
+        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (?, ?, ?);", (user_id, title, article_text))
     db_close(conn, cur)
     return redirect('/lab5')
 
@@ -147,7 +150,10 @@ def list():
         db_close(conn, cur)
         return redirect('/lab5/login')
 
-    cur.execute("SELECT * FROM articles WHERE user_id=%s;", (user_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM articles WHERE user_id=%s;", (user_id,))
+    else:
+        cur.execute("SELECT * FROM articles WHERE user_id=?;", (user_id,))
     articles = cur.fetchall()
     db_close(conn, cur)
     return render_template('/lab5/articles.html', articles=articles)
