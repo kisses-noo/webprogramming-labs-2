@@ -8,7 +8,7 @@ from lab6 import lab6
 from lab7 import lab7
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет') 
 app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
