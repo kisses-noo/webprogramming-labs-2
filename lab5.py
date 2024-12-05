@@ -5,10 +5,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 from os import path
 
-lab5 = Blueprint('lab5', __name__)
+lab5 = Blueprint('lab5', __name__, static_folder='static')
 @lab5.route('/lab5')
 def lab():
-    return render_template('lab5/lab5.html', login=session.get('login'))
+    username = session.get('login', '')
+    return render_template('lab5/lab5.html', login=session.get('login'), username=username)
 
 def db_connect():
     if current_app.config['DB_TYPE'] == 'postgres':
@@ -40,15 +41,15 @@ def register():
     login = request.form.get('login') 
     password = request.form.get('password')
 
-    if not login or not password:
+    if not (login or password):
         return render_template('lab5/register.html', error='Заполните все поля')
     
     conn, cur = db_connect()
     
     if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT login FROM users WHERE login=%s;", (login,))
+        cur.execute("SELECT login FROM users WHERE login=%s;", (login, ))
     else: 
-        cur.execute("SELECT login FROM users WHERE login=?;", (login,))
+        cur.execute("SELECT login FROM users WHERE login=?;", (login, ))
     
     if cur.fetchone():
         db_close(conn, cur)
@@ -72,15 +73,15 @@ def login():
     login = request.form.get('login')
     password = request.form.get('password')
 
-    if not login or not password:
+    if not (login or password):
         return render_template('lab5/login.html', error="Заполните поля")
     
     conn, cur = db_connect()
     
     if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT * FROM users WHERE login=%s;", (login,))
+        cur.execute("SELECT * FROM users WHERE login=%s;", (login, ))
     else:
-        cur.execute("SELECT * FROM users WHERE login=?;", (login,))
+        cur.execute("SELECT * FROM users WHERE login=?;", (login, ))
 
     user = cur.fetchone()
 
@@ -107,13 +108,14 @@ def create():
     
     title = request.form.get('title')
     article_text = request.form.get('article_text')
+    
 
     conn, cur = db_connect()
     
     if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT id FROM users WHERE login=%s;", (login,))
+        cur.execute("SELECT * FROM users WHERE login=%s;", (login,))
     else:
-        cur.execute("SELECT id FROM users WHERE login=?;", (login,))
+        cur.execute("SELECT * FROM users WHERE login=?;", (login,))
 
     user = cur.fetchone()
     user_id = user["id"] if user else None
@@ -125,7 +127,10 @@ def create():
     if not title or not article_text:
         return render_template('lab5/create_article.html', error='Название и текст статьи не могут быть пустыми.')
 
-    cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", (user_id, title, article_text))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s);", (user_id, title, article_text))
+    else:
+        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (?, ?, ?);", (user_id, title, article_text))
     db_close(conn, cur)
     return redirect('/lab5')
 
@@ -149,8 +154,10 @@ def list():
     if user_id is None:
         db_close(conn, cur)
         return redirect('/lab5/login')
-
-    cur.execute("SELECT * FROM articles WHERE user_id=%s;", (user_id,))
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute("SELECT * FROM articles WHERE user_id=%s;", (user_id,))
+    else:
+        cur.execute("SELECT * FROM articles WHERE user_id=?;", (user_id,))
     articles = cur.fetchall()
     
     db_close(conn, cur)
