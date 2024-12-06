@@ -29,9 +29,8 @@ def db_connect():
         cur = conn.cursor()
     return conn, cur
 
-def db_close(conn, cur, commit=False):
-    if commit and current_app.config['DB_TYPE'] == 'postgres':
-        conn.commit()
+def db_close(conn, cur):
+    conn.commit()
     cur.close()
     conn.close()
 
@@ -64,7 +63,7 @@ def register():
     else:
         cur.execute("INSERT INTO users (login, password) VALUES (?, ?);", (login, password_hash))
     
-    db_close(conn, cur, commit=True)
+    db_close(conn, cur)
     return render_template('lab5/succes.html', login=login)
 
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
