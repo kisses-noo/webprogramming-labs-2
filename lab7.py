@@ -69,6 +69,8 @@ def put_film(id):
     if id < 0 or id >= len(films):
         return '', 404
     film = request.get_json()
+    if film['description'] == '':
+        return {'description': 'Заполнение описание'}, 400
     films[id]=film
     return films[id]
 
@@ -76,6 +78,9 @@ def put_film(id):
 def add_film():
     # Получаем данные нового фильма из тела запроса
     new_film = request.get_json()
+    
+    if new_film['description'] == '':
+        return {'description': 'Заполнение описание'}, 400
     
     # Добавляем новый фильм в список
     films.append(new_film)
