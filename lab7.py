@@ -71,3 +71,15 @@ def put_film(id):
     film = request.get_json()
     films[id]=film
     return films[id]
+
+@lab7.route('/lab7/rest-api/films/', methods=['POST']) 
+def add_film():
+    # Получаем данные нового фильма из тела запроса
+    new_film = request.get_json()
+    
+    # Добавляем новый фильм в список
+    films.append(new_film)
+    
+    return '', 201  # 201 — статус код, указывающий на то, что ресурс был создан
+        
+
