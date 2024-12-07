@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session, abort
+from flask import Blueprint, render_template, request, abort
 
 lab7 = Blueprint('lab7', __name__)
 
@@ -69,8 +69,14 @@ def put_film(id):
     if id < 0 or id >= len(films):
         return '', 404
     film = request.get_json()
+    
+    # Автоматически заполняем оригинальное название, если оно пустое
+    if film['title'] == '' and film['title_ru'] != '':
+        film['title'] = film['title_ru']
+        
     if film['description'] == '':
         return {'description': 'Заполнение описание'}, 400
+    
     films[id]=film
     return films[id]
 
@@ -78,6 +84,10 @@ def put_film(id):
 def add_film():
     # Получаем данные нового фильма из тела запроса
     new_film = request.get_json()
+    
+    # Автоматически заполняем оригинальное название, если оно пустое
+    if new_film['title'] == '' and new_film['title_ru'] != '':
+        new_film['title'] = new_film['title_ru']
     
     if new_film['description'] == '':
         return {'description': 'Заполнение описание'}, 400

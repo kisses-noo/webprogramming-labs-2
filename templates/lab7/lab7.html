@@ -8,23 +8,50 @@
 .modal {
     display: none;
     z-index: 100;
-    box-shadow: 3px 3px 5px black;
-    background: white;
-    width: 400px;
+    background: bisque;
+    width: 420px;
     left: 50%;
     top: 220px;
-    margin-left: -200px;
+    margin-left: -210px;
     position: absolute;
     padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 .error-message {
     color: red;
 }
+
+.st {
+    color: BurtyWood; 
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: Honeydew;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #e0e0e0;
+}
+
+th {
+    background-color: #eceff1;
+}
+
+
 </style>    
 {% endblock %}
 
 {% block main %}
-    <hl>Список фильмов</h1>
+<div class=st ><hl>Список фильмов</h1></div>
     <table>
         <thead>
             <tr>
