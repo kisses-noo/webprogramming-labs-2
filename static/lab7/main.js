@@ -6,7 +6,7 @@ function fillFilmList() {
     .then(function(films)  {
         let tbody = document.getElementById('film-list');
         tbody.innerHTML = '';
-        for(let i = 0; i<films.length; i++) {
+        for(let i = 0; i < films.length; i++) {
             let tr = document.createElement('tr');
             let tdTitleRus = document.createElement('td'); 
             let tdTitle = document.createElement('td'); 
@@ -20,13 +20,13 @@ function fillFilmList() {
             let editButton = document.createElement('button');
             editButton.innerText = 'Редактировать';
             editButton.onclick = function() {
-                editFilm(i);
+                editFilm(films[i].id); // передаем правильный ID
             };              
         
             let delButton = document.createElement('button');
             delButton.innerText = 'Удалить';
             delButton.onclick = function(){
-                deleteFilm(i, films[i].title_ru);
+                deleteFilm(films[i].id, films[i].title_ru); // передаем правильный ID
             };
         
             tdActions.append(editButton); 
@@ -38,18 +38,23 @@ function fillFilmList() {
             tr.append(tdActions);
             tbody.append(tr);
         }
-            
-
     })
+    .catch(function(error) {
+        console.error('Error fetching films:', error);
+    });
 }
 
 function deleteFilm(id, title) {
-    if(! confirm(`Вы точно хотите удалить фильм "${title}"?`))
+    if(!confirm(`Вы точно хотите удалить фильм "${title}"?`))
         return;
 
     fetch(`/lab7/rest-api/films/${id}`, {method: 'DELETE'})
-    .then(function () {
-        fillFilmList();
+    .then(function (response) {
+        if(response.ok) {
+            fillFilmList();
+        } else {
+            console.error('Error deleting film:', response.statusText);
+        }
     });
 }
 
@@ -82,11 +87,11 @@ function sendFilm() {
     const film = {
         title: document.getElementById('title').value,
         title_ru: document.getElementById('title-ru').value,
-        year: document.getElementById('year').value,
+        year: parseInt(document.getElementById('year').value, 10),
         description: document.getElementById('description').value
     }
 
-    const url = `/lab7/rest-api/films/${id}`;
+    const url = id === '' ? `/lab7/rest-api/films/` : `/lab7/rest-api/films/${id}`;
     const method = id === '' ? 'POST' : 'PUT';
 
     fetch(url, {
@@ -95,22 +100,28 @@ function sendFilm() {
         body: JSON.stringify(film)
     })
     .then(function(rest) {
-        if(rest.ok) {
+        if (rest.ok) {
             fillFilmList();
             hideModal();
             return {};
         }
         return rest.json();
     })
-
     .then(function(errors) {
         document.getElementById('description-error').innerText = '';
-        if (errors.description)
+        
+        if (errors.title_ru) {
+            alert(errors.title_ru);
+        }
+        if (errors.description) {
             document.getElementById('description-error').innerText = errors.description;
+        }
+        if (errors.year) {
+            alert(errors.year);
+        }
     });
-      
-
 }
+
 
 function editFilm(id) {
     fetch(`/lab7/rest-api/films/${id}`)

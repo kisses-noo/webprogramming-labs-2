@@ -1,100 +1,132 @@
-from flask import Blueprint, render_template, request, abort
+from flask import Blueprint, render_template, request, abort, current_app
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import sqlite3
+from os import path
 
 lab7 = Blueprint('lab7', __name__)
+
+def db_connect():
+    if current_app.config['DB_TYPE'] == 'postgres':
+        conn = psycopg2.connect(
+            host='127.0.0.1',
+            database='alina_andreicheva_knowledge_base',
+            user='alina_andreicheva_knowledge_base',
+            password='123'
+        )
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+    else:
+        dir_path = path.dirname(path.realpath(__file__))
+        db_path = path.join(dir_path, "database.db")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+    return conn, cur
+
+def db_close(conn, cur, commit=False):
+    if commit:
+        conn.commit()
+    cur.close()
+    conn.close()
 
 @lab7.route('/lab7')
 def main():
     return render_template('lab7/lab7.html')
 
-films = [
-    {
-        "title": "Inception",
-        "title_ru": "Начало",
-        "year": 2010,
-        "description": "Эксперт по предметам снов, Доминк Кобб, стал мастером во взломе секретов из разумов людей во время их сна. Его необычайные навыки сделали его искомым, но также и беглым преступником. После убийства жены, он получает шанс стереть свое преступное прошлое, выполнив необычный проект — внедрение идеи в сознание владельца компании, что называется 'инцепция'. Чтобы сделать это, ему необходимо собрать команду профессионалов в области снов, однако на каждом шагу их ждут риски и предательства."
-    },
-    
-    {
-        "title": "The Shawshank Redemption",
-        "title_ru": "Побег из Шоушенка",
-        "year": 1994,
-        "description": "История о банковском служащем Энди Дюфрейне, который был ошибочно осужден за убийство своей жены и её любовника. В тюремном учреждении Шоушенк его жизнь выглядит безысходной, пока он не формирует неожиданную дружбу с заключенным Редом. Этот фильм поднимает вопросы надежды, свободы и силу человеческого духа, показывая, как Энди, используя свои навыки, находит выход из сложных ситуаций и помогает другим заключенным обрести надежду на лучшую жизнь."
-    },
-    
-    {
-        "title": "The Godfather",
-        "title_ru": "Крёстный отец",
-        "year": 1972,
-        "description": "Семейная драма, разворачивающаяся на фоне мафиозных разборок в послевоенной Америке. Фильм рассказывает о семье Корлеоне, олицетворении власти и традиции. В центре сюжета находится Вито Корлеоне, мирный бизнесмен и глава клана, который старается защитить свою семью, отстаивая свою честь и влияние. Когда его сын Майкл, изначально не желающий принимать участие в семейных делах, оказывается втянут в мир преступлений, это приводит к драматическим последствиям, которые меняют их жизни навсегда."
-    },
-    
-    {
-        "title": "Pulp Fiction",
-        "title_ru": "Криминальное чтиво",
-        "year": 1994,
-        "description": "Неординарный фильм, который соединяет несколько переплетённых историй о преступниках, каждый из которых сталкивается с любовью, насилием и искуплением. От безжалостного киллера до наивного боксёра и его неуёмной жены, выплетается сложная сеть событий, ритм и стиль которых полон уникальных диалогов и неожиданностей. Режиссёр Квентин Тарантино создает не просто фильм, а культовое произведение искусства, которое находит отклик в сердцах зрителей благодаря своей оригинальности и глубоким темам."
-    },
-    
-    {
-        "title": "The Dark Knight",
-        "title_ru": "Тёмный рыцарь",
-        "year": 2008,
-        "description": "Во второй части трилогии о Бэтмене, Готэм сталкивается с новыми угрозами, когда на сцене появляется Джокер — безумный преступник, решивший сеять хаос и разрушение. Бэтмен, совместно с комиссаром Гордоном и прокурором Харви Дентом, старается поддерживать порядок в городе. Однако, когда Джокер начинает атаковать их личные жизни и моральные принципы, борьба за справедливость превращается в войну, в которой вопрос о том, что такое добро и зло, становится еще более запутанным."
-    },
-]
-
-
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
-    return films
+    conn, cur = db_connect()
+    cur.execute("SELECT * FROM films;")
+    films = cur.fetchall()
+    db_close(conn, cur)
+    return [dict(film) for film in films]
 
-@lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET']) 
+@lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    # Проверка на принадлежность id диапазону
-    if id < 0 or id >= len(films):
-        abort(404)  # Возвращаем ошибку 404 если индекс неверный
-    return films[id]
+    conn, cur = db_connect()
+    cur.execute("SELECT * FROM films WHERE id = %s;", (id,) if current_app.config['DB_TYPE'] == 'postgres' else (id,))
+    film = cur.fetchone()
+    db_close(conn, cur)
+    if film is None:
+        abort(404)
+    return dict(film)
 
-@lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE']) 
-def del_film(id): 
-    # Проверяем, существует ли фильм с данным id
-    if id < 0 or id >= len(films):
-        return '', 404  # Возврат статуса 404, если фильм не найден
-    
-    del films[id]
+@lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
+def del_film(id):
+    conn, cur = db_connect()
+    cur.execute("DELETE FROM films WHERE id = %s;", (id,) if current_app.config['DB_TYPE'] == 'postgres' else (id,))
+    db_close(conn, cur, commit=True)
     return '', 204
 
-@lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT']) 
+@lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    if id < 0 or id >= len(films):
-        return '', 404
     film = request.get_json()
-    
-    # Автоматически заполняем оригинальное название, если оно пустое
-    if film['title'] == '' and film['title_ru'] != '':
-        film['title'] = film['title_ru']
-        
-    if film['description'] == '':
-        return {'description': 'Заполнение описание'}, 400
-    
-    films[id]=film
-    return films[id]
+    conn, cur = db_connect()
 
-@lab7.route('/lab7/rest-api/films/', methods=['POST']) 
+    if not film.get('title_ru'):
+        return {'title_ru': 'Русское название обязательно'}, 400
+
+    if film.get('description', '') == '':
+        return {'description': 'Описание обязательно'}, 400
+
+    if film['year'] < 1895 or film['year'] > 2023:
+        return {'year': 'Год должен быть между 1895 и 2023'}, 400
+
+    if not film.get('title') and film['title_ru']:
+        film['title'] = film['title_ru']
+
+    cur.execute("""
+        UPDATE films 
+        SET title = %s, title_ru = %s, year = %s, description = %s 
+        WHERE id = %s;
+    """, (
+        film['title'],
+        film['title_ru'],
+        film['year'],
+        film['description'],
+        id
+    ) if current_app.config['DB_TYPE'] == 'postgres' else (
+        film['title'],
+        film['title_ru'],
+        film['year'],
+        film['description'],
+        id
+    ))
+    
+    db_close(conn, cur, commit=True)
+    return film
+
+@lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
-    # Получаем данные нового фильма из тела запроса
     new_film = request.get_json()
     
-    # Автоматически заполняем оригинальное название, если оно пустое
-    if new_film['title'] == '' and new_film['title_ru'] != '':
+    if not new_film.get('title_ru'):
+        return {'title_ru': 'Русское название обязательно'}, 400
+
+    if new_film['description'] == '' or len(new_film['description']) > 2000:
+        return {'description': 'Описание обязательно и не может превышать 2000 символов'}, 400
+
+    if new_film['year'] < 1895 or new_film['year'] > 2023:
+        return {'year': 'Год должен быть между 1895 и 2023'}, 400
+
+    if not new_film.get('title') and new_film['title_ru']:
         new_film['title'] = new_film['title_ru']
     
-    if new_film['description'] == '':
-        return {'description': 'Заполнение описание'}, 400
+    conn, cur = db_connect()
+    cur.execute("""
+        INSERT INTO films (title, title_ru, year, description) 
+        VALUES (%s, %s, %s, %s);
+    """, (
+        new_film['title'],
+        new_film['title_ru'],
+        new_film['year'],
+        new_film['description']
+    ) if current_app.config['DB_TYPE'] == 'postgres' else (
+        new_film['title'],
+        new_film['title_ru'],
+        new_film['year'],
+        new_film['description']
+    ))
     
-    # Добавляем новый фильм в список
-    films.append(new_film)
-    
-    return '', 201  # 201 — статус код, указывающий на то, что ресурс был создан
-        
-
+    db_close(conn, cur, commit=True)
+    return '', 201
