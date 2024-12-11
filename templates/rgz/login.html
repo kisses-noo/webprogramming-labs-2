@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block lab %}Вход в систему{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block main %}
+    <h1>Вход в систему</h1>
+    {% if error %}
+        <div style="color: red;">{{ error }}</div>
+    {% endif %}
+    <div>
+        <form action="/rgz/login" method="post">
+            <div>
+                <label for="login">Логин:</label>
+                <input type="text" name="login" required>
+            </div>
+            <div>
+                <label for="password">Пароль:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Вход</button>
+        </form>
+    </div>
+{% endblock %}

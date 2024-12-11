@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block lab %}РГЗ{% endblock %}
+
+{% block main %}
+    <h1>Вход успешен!</h1>
+    <p>Вы успешно вошли как администратор: {{ login }}</p>
+    <a href="/rzg/recipes">Перейти к списку рецептов</a>
+{% endblock %}
