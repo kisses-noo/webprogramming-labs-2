@@ -79,34 +79,28 @@
 
 {% block main %}
 <h1>Список Рецептов</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Название</th>
-            <th>Изображение</th>
-            <th>Шаг</th>
-            <th>Действие</th>
-        </tr>
-    </thead>
-    <tbody id="recipe-list"></tbody>
-</table>
+<div class="recipe-container" id="recipe-list"></div>
+<button onclick="showAddRecipeModal()">Добавить рецепт</button>
 
-<button onclick="addRecipe()">Добавить рецепт</button>
-
-<div class="modal">
-    <input type="hidden" id="id">
-    <label>Название:
-        <input type="text" id="title">
-    </label><br>
-    <label>Изображение URL:
-        <input type="text" id="image_url">
-    </label><br>
-    <label>Шаг:
-        <textarea id="step"></textarea>
-    </label><br>
-    <button onclick="sendRecipe()">OK</button>
-    <button onclick="hideModal()">Отмена</button>
+<div class="modal" id="add-recipe-modal">
+    <input type="text" id="recipe-title" placeholder="Название рецепта">
+    <textarea id="recipe-step" placeholder="Шаги приготовления"></textarea>
+    <input type="text" id="recipe-image-url" placeholder="URL изображения">
+    <button onclick="addRecipe()">Добавить</button>
+    <button onclick="hideAddRecipeModal()">Отмена</button>
 </div>
 
+<div class="modal" id="edit-recipe-modal">
+    <input type="text" id="edit-recipe-title" placeholder="Название рецепта">
+    <textarea id="edit-recipe-step" placeholder="Шаги приготовления"></textarea>
+    <input type="text" id="edit-recipe-image-url" placeholder="URL изображения">
+    <button onclick="updateRecipe()">Сохранить изменения</button>
+    <button onclick="hideEditRecipeModal()">Отмена</button>
+</div>
+
+
 <script src="{{ url_for('static', filename='rgz/main.js') }}"></script>
+<script>
+    fillRecipeList(); // Заполнение списка рецептов при загрузке
+</script>
 {% endblock %}

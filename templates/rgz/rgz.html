@@ -1,97 +1,73 @@
 {% extends "base.html" %}
 
-{% block lab %}Список Рецептов{% endblock %}
+{% block laba %}РГЗ{% endblock %}
 
-{% block style %}
+{% block script %}
+<script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
 <style>
-    
-    h1 {
+    .container {
         text-align: center;
-        color: #333; /* Тёмный цвет заголовка */
-        margin-bottom: 20px;
-    }
-
-    .modal {
-        display: none;
-        z-index: 100;
         background: white;
-        width: 400px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        position: fixed;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-    }
-
-    .recipe-container {
-        padding: 20px;
-        max-width: 800px; /* Максимальная ширина контейнера */
-        margin: 0 auto; /* Центрирование */
-        background-color: white; /* Белый фон для контейнера */
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
-    .recipe-item {
-        background-color: #fff; /* Белый фон для каждого рецепта */
-        padding: 15px;
+    
+    .username {
         margin: 20px 0;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s; /* Плавный переход */
+        font-size: 18px;
     }
-
-
-    .recipe-item img {
-        max-width: 100%; /* Устанавливаем максимальную ширину изображения */
-        height: auto; /* Автоматическая высота для пропорций */
-        border-radius: 5px; /* Округление углов изображения */
+    
+    .button-container {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрируем кнопки */
     }
-
-    .recipe-title {
-        font-size: 24px; /* Увеличенный размер заголовка */
-        color: #333; /* Темный цвет текста */
-        margin-bottom: 10px;
+    
+    .button-list {
+        list-style: none;
+        padding: 0;
     }
-
-    .recipe-step {
-        font-size: 16px; /* Размер шрифта для шагов */
-        color: #555; /* Цвет текста для шагов */
+    
+    .button-item {
         margin: 10px 0;
     }
 
-
-    textarea {
-        width: 100%; /* Ширина текстового поля */
-        height: 100px; /* Высота текстового поля */
-        margin-top: 10px;
-        padding: 10px;
+    .button-link {
+        text-decoration: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
         border-radius: 5px;
-        border: 1px solid #ccc; /* Серая рамка */
+        background-color: #28a745;
+        color: white;
+        transition: background-color 0.3s;
+        display: inline-block;
     }
-
-
-</style>
+    
+    .button-link:hover {
+        background-color: #218838;
+    }
+    
+    .header {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold; 
+    }
+</style>    
 {% endblock %}
 
 {% block main %}
-<h1>Список Рецептов</h1>
-<div class="recipe-container" id="recipe-list"></div>
-<button onclick="showAddRecipeModal()">Добавить рецепт</button>
-
-<div class="modal" id="add-recipe-modal">
-    <input type="text" id="recipe-title" placeholder="Название рецепта">
-    <textarea id="recipe-step" placeholder="Шаги приготовления"></textarea>
-    <input type="text" id="recipe-image-url" placeholder="URL изображения">
-    <button onclick="addRecipe()">Добавить</button>
-    <button onclick="hideAddRecipeModal()">Отмена</button>
+<div class="button-container">
+    <div class="header">Пожалуйста, выберите вашу роль:</div>
+    <ol class="button-list">
+        <li class="button-item">
+            <a href="/rzg/recipes" class="button-link">Обычный пользователь</a>
+        </li>
+        <li class="button-item">
+            <a href="/rgz/entrance" class="button-link">Администратор</a>
+        </li>
+    </ol> 
 </div>
-
-<script src="{{ url_for('static', filename='rgz/main.js') }}"></script>
-<script>
-    fillRecipeList(); // Заполнение списка рецептов при загрузке
-</script>
 {% endblock %}

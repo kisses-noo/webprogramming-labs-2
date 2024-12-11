@@ -52,15 +52,27 @@ function deleteRecipe(id) {
     });
 }
 
+let currentRecipeId = null; // Переменная для хранения ID текущего редактируемого рецепта
+
 function showAddRecipeModal() {
     document.getElementById('add-recipe-modal').style.display = 'block';
     clearRecipeForm();
+    currentRecipeId = null; // Сбрасываем ID
+}
+
+function showEditRecipeModal() {
+    document.getElementById('edit-recipe-modal').style.display = 'block';
 }
 
 function hideAddRecipeModal() {
     document.getElementById('add-recipe-modal').style.display = 'none';
 }
 
+function hideEditRecipeModal() {
+    document.getElementById('edit-recipe-modal').style.display = 'none';
+}
+
+// Существующая функция addRecipe
 function addRecipe() {
     const newRecipe = {
         title: document.getElementById('recipe-title').value,
@@ -81,19 +93,43 @@ function addRecipe() {
     });
 }
 
+// Новая функция для обновления рецепта
+function updateRecipe() {
+    const updatedRecipe = {
+        title: document.getElementById('edit-recipe-title').value,
+        step: document.getElementById('edit-recipe-step').value,
+        image_url: document.getElementById('edit-recipe-image-url').value,
+    };
+
+    fetch(`/rgz/rest-api/recipes/${currentRecipeId}`, {
+        method: 'PUT', // Используем PUT для обновления
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedRecipe),
+    })
+    .then(function (response) {
+        if (response.ok) {
+            fillRecipeList(); // Обновляем список рецептов
+            hideEditRecipeModal(); // Скрываем модальное окно
+        }
+    });
+}
+
+// Изменяем функцию editRecipe
 function editRecipe(id) {
+    currentRecipeId = id; // Сохраняем ID рецепта
     fetch(`/rgz/rest-api/recipes/${id}`)
     .then(function (response) {
         if (response.ok) {
             response.json().then(function(recipe) {
-                document.getElementById('recipe-title').value = recipe.title;
-                document.getElementById('recipe-step').value = recipe.step;
-                document.getElementById('recipe-image-url').value = recipe.image_url;
-                showAddRecipeModal(); // показать модальное окно
+                document.getElementById('edit-recipe-title').value = recipe.title;
+                document.getElementById('edit-recipe-step').value = recipe.step;
+                document.getElementById('edit-recipe-image-url').value = recipe.image_url;
+                showEditRecipeModal(); // показываем модальное окно для редактирования
             });
         }
     });
 }
+
 
 function clearRecipeForm() {
     document.getElementById('recipe-title').value = '';

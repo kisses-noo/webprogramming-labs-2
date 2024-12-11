@@ -151,3 +151,17 @@ def add_ingredient():
     db_close(conn, cur, commit=True)
     
     return jsonify({'id': ingredient_id}), 201
+
+@rgz.route('/rgz/rest-api/recipes/<int:id>', methods=['PUT'])
+def update_recipe(id):
+    updated_recipe = request.get_json()
+    conn, cur = db_connect()
+    
+    cur.execute("""
+        UPDATE recipes
+        SET title = %s, step = %s, image_url = %s
+        WHERE id = %s;
+    """, (updated_recipe['title'], updated_recipe['step'], updated_recipe['image_url'], id))
+    
+    db_close(conn, cur, commit=True)
+    return jsonify({'id': id}), 200
