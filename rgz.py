@@ -165,3 +165,34 @@ def update_recipe(id):
     
     db_close(conn, cur, commit=True)
     return jsonify({'id': id}), 200
+
+@rgz.route('/rgz/rest-api/recipes/<int:id>/ingredients', methods=['POST'])
+def add_recipe_ingredients(id):
+    ingredients = request.get_json().get('ingredients', [])
+    conn, cur = db_connect()
+
+    # Сначала удалим все текущие ингредиенты
+    cur.execute("DELETE FROM recipe_ingredients WHERE recipe_id = %s;", (id,))
+    
+    # Теперь добавим новые ингредиенты
+    for ingredient_id in ingredients:
+        cur.execute("""
+            INSERT INTO recipe_ingredients (recipe_id, ingredient_id) 
+            VALUES (%s, %s);
+        """, (id, ingredient_id))
+    
+    db_close(conn, cur, commit=True)
+    return '', 204
+
+@rgz.route('/rgz/rest-api/recipes/<int:id>/ingredients', methods=['GET'])
+def get_recipe_ingredients(id):
+    conn, cur = db_connect()
+    cur.execute("""
+        SELECT ingredients.id, ingredients.name 
+        FROM ingredients 
+        JOIN recipe_ingredients ON ingredients.id = recipe_ingredients.ingredient_id 
+        WHERE recipe_ingredients.recipe_id = %s;
+    """, (id,))
+    ingredients = cur.fetchall()
+    db_close(conn, cur)
+    return jsonify([dict(ingredient) for ingredient in ingredients])

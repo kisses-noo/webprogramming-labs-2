@@ -86,6 +86,8 @@
     <input type="text" id="recipe-title" placeholder="Название рецепта">
     <textarea id="recipe-step" placeholder="Шаги приготовления"></textarea>
     <input type="text" id="recipe-image-url" placeholder="URL изображения">
+    <label for="ingredient-select">Ингредиенты:</label>
+    <select id="ingredient-select" multiple></select>
     <button onclick="addRecipe()">Добавить</button>
     <button onclick="hideAddRecipeModal()">Отмена</button>
 </div>
@@ -94,13 +96,15 @@
     <input type="text" id="edit-recipe-title" placeholder="Название рецепта">
     <textarea id="edit-recipe-step" placeholder="Шаги приготовления"></textarea>
     <input type="text" id="edit-recipe-image-url" placeholder="URL изображения">
+    <label for="edit-ingredient-select">Ингредиенты:</label>
+    <select id="edit-ingredient-select" multiple></select>
     <button onclick="updateRecipe()">Сохранить изменения</button>
     <button onclick="hideEditRecipeModal()">Отмена</button>
 </div>
 
-
 <script src="{{ url_for('static', filename='rgz/main.js') }}"></script>
 <script>
     fillRecipeList(); // Заполнение списка рецептов при загрузке
+    loadIngredients(); // Загрузка списка ингредиентов
 </script>
 {% endblock %}
