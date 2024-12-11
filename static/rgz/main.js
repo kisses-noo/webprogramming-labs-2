@@ -15,20 +15,24 @@ function fillRecipeList() {
                 <p>Ингредиенты: <span id="recipe-${recipe.id}-ingredients"></span></p>
             `;
 
-            const editButton = document.createElement('button');
-            editButton.innerText = 'Редактировать';
-            editButton.onclick = function() {
-                editRecipe(recipe.id); // передаем правильный ID
-            };
+            // Проверка, является ли пользователь администратором
+            if (isAdmin) {
+                const editButton = document.createElement('button');
+                editButton.innerText = 'Редактировать';
+                editButton.onclick = function() {
+                    editRecipe(recipe.id); // передаем правильный ID
+                };
 
-            const delButton = document.createElement('button');
-            delButton.innerText = 'Удалить';
-            delButton.onclick = function() {
-                deleteRecipe(recipe.id); // передаем правильный ID
-            };
+                const delButton = document.createElement('button');
+                delButton.innerText = 'Удалить';
+                delButton.onclick = function() {
+                    deleteRecipe(recipe.id); // передаем правильный ID
+                };
 
-            recipeItem.appendChild(editButton);
-            recipeItem.appendChild(delButton);
+                recipeItem.appendChild(editButton);
+                recipeItem.appendChild(delButton);
+            }
+
             recipeList.appendChild(recipeItem);
 
             // Загрузка ингредиентов для конкретного рецепта
@@ -37,6 +41,9 @@ function fillRecipeList() {
     })
     .catch(error => console.error('Error fetching recipes:', error));
 }
+
+
+
 
 
 function loadIngredients() {
@@ -218,4 +225,50 @@ function clearRecipeForm() {
     document.getElementById('recipe-title').value = '';
     document.getElementById('recipe-step').value = '';
     document.getElementById('recipe-image-url').value = '';
+}
+
+function performSearch() {
+    const titleQuery = document.getElementById('search-title').value.toLowerCase();
+    const ingredientsQuery = document.getElementById('search-ingredients').value.split(',').map(i => i.trim().toLowerCase());
+    const searchMode = document.getElementById('search-mode').value;
+
+    fetch('/rgz/rest-api/recipes/')
+    .then(response => response.json())
+    .then(recipes => {
+        const recipeList = document.getElementById('recipe-list');
+        recipeList.innerHTML = ''; // очистить список
+
+        recipes.forEach(recipe => {
+            const recipeItem = document.createElement('div');
+            recipeItem.className = 'recipe-item';
+            recipeItem.id = `recipe-${recipe.id}`;
+            recipeItem.innerHTML = `
+                <h3>${recipe.title}</h3>
+                <img src="${recipe.image_url}" alt="${recipe.title}" />
+                <p>${recipe.step}</p>
+                <p>Ингредиенты: <span id="recipe-${recipe.id}-ingredients"></span></p>
+                <button onclick="editRecipe(${recipe.id})">Редактировать</button>
+                <button onclick="deleteRecipe(${recipe.id})">Удалить</button>
+            `;
+
+            // Проверка по названию
+            const titleMatch = recipe.title.toLowerCase().includes(titleQuery);
+
+            // Проверка по ингредиентам с учётом частичного совпадения
+            const ingredientMatch = ingredientsQuery.length > 0 && ingredientsQuery[0] !== '' ? 
+                (searchMode === 'all' ? 
+                    ingredientsQuery.every(ingredient => {
+                        return recipe.ingredients.some(ingredientName => ingredientName.includes(ingredient));
+                    }) : 
+                    ingredientsQuery.some(ingredient => {
+                        return recipe.ingredients.some(ingredientName => ingredientName.includes(ingredient));
+                    })) : true;
+
+            if (titleMatch && ingredientMatch) {
+                recipeList.appendChild(recipeItem);
+                loadRecipeIngredients(recipe.id); // Загрузка ингредиентов для отображения
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching recipes:', error));
 }

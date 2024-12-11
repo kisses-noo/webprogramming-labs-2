@@ -4,7 +4,8 @@
 
 {% block style %}
 <style>
-    
+
+
     h1 {
         text-align: center;
         color: #333; /* Тёмный цвет заголовка */
@@ -73,14 +74,66 @@
         border: 1px solid #ccc; /* Серая рамка */
     }
 
+    #search-title {
+        margin: 10px 0;
+        padding: 5px;
+        width: 200px;
+    }
+    
+    label {
+        margin-right: 10px;
+    }
+
+    .logout-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .logout-button:hover {
+        background-color: #c82333;
+    }
 
 </style>
 {% endblock %}
 
 {% block main %}
+{% if login %}
+    <h2>Добро пожаловать, {{ login }}!</h2>
+    <script>
+        const isAdmin = "{{ login }}" === "admin"; // Создаем переменную для проверки прав администратора
+    </script>
+{% else %}
+    <h2>Добро пожаловать!</h2>
+    <script>
+        const isAdmin = false; // Пользователь не администратор
+    </script>
+{% endif %}
+
 <h1>Список Рецептов</h1>
+
+<!-- Добавим форму для поиска -->
+<div>
+    <input type="text" id="search-title" placeholder="Поиск по названию">
+    <input type="text" id="search-ingredients" placeholder="Поиск по ингредиентам (через запятую)">
+    <select id="search-mode">
+        <option value="all">Все ингредиенты</option>
+        <option value="any">Хотя бы один ингредиент</option>
+    </select>
+    <button onclick="performSearch()">Поиск</button>
+</div>
+
+
 <div class="recipe-container" id="recipe-list"></div>
-<button onclick="showAddRecipeModal()">Добавить рецепт</button>
+
+{% if login == 'admin' %}
+    <button onclick="showAddRecipeModal()">Добавить рецепт</button>
+{% endif %}
+
 
 <div class="modal" id="add-recipe-modal">
     <input type="text" id="recipe-title" placeholder="Название рецепта">
@@ -100,6 +153,13 @@
     <select id="edit-ingredient-select" multiple></select>
     <button onclick="updateRecipe()">Сохранить изменения</button>
     <button onclick="hideEditRecipeModal()">Отмена</button>
+</div>
+
+
+<div>
+    {% if login == 'admin' %} 
+        <button class="logout-button" onclick="location.href='/rgz/logout'">Выход</button>
+    {% endif %}
 </div>
 
 <script src="{{ url_for('static', filename='rgz/main.js') }}"></script>

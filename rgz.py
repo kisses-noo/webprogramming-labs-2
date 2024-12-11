@@ -93,8 +93,21 @@ def get_recipes():
     conn, cur = db_connect()
     cur.execute("SELECT * FROM recipes;")
     recipes = cur.fetchall()
+
+    # Получаем ингредиенты для каждого рецепта
+    for recipe in recipes:
+        cur.execute("""
+            SELECT ingredients.name 
+            FROM ingredients 
+            JOIN recipe_ingredients ON ingredients.id = recipe_ingredients.ingredient_id 
+            WHERE recipe_ingredients.recipe_id = %s;
+        """, (recipe['id'],))
+        ingredients = cur.fetchall()
+        recipe['ingredients'] = [i['name'].lower() for i in ingredients]
+
     db_close(conn, cur)
     return jsonify([dict(recipe) for recipe in recipes])
+
 
 @rgz.route('/rgz/rest-api/recipes/<int:id>', methods=['GET'])
 def get_recipe(id):
