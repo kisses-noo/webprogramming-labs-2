@@ -7,6 +7,7 @@ function fillRecipeList() {
         recipes.forEach(recipe => {
             const recipeItem = document.createElement('div');
             recipeItem.className = 'recipe-item';
+            recipeItem.id = `recipe-${recipe.id}`; // добавляем уникальный ID
             recipeItem.innerHTML = `
                 <h3>${recipe.title}</h3>
                 <img src="${recipe.image_url}" alt="${recipe.title}" />
@@ -36,6 +37,7 @@ function fillRecipeList() {
     })
     .catch(error => console.error('Error fetching recipes:', error));
 }
+
 
 function loadIngredients() {
     fetch('/rgz/rest-api/ingredients/')
@@ -73,14 +75,16 @@ function deleteRecipe(id) {
     }
 
     fetch(`/rgz/rest-api/recipes/${id}`, { method: 'DELETE' })
-    .then(function (response) {
+    .then(response => {
         if (response.ok) {
             fillRecipeList(); // Обновляем список после удаления
         } else {
             console.error('Error deleting recipe:', response.statusText);
         }
-    });
+    })
+    .catch(error => console.error('Error deleting recipe:', error));
 }
+
 
 let currentRecipeId = null; // Переменная для хранения ID текущего редактируемого рецепта
 
@@ -189,9 +193,25 @@ function updateRecipe() {
         }
     })
     .then(() => {
-        fillRecipeList(); // Обновляем список рецептов
+        // Вместо перезагрузки всего списка обновляем конкретный рецепт в списке
+        const recipeItem = document.getElementById(`recipe-${currentRecipeId}`);
+        updateRecipeInDOM(recipeItem, updatedRecipe);
         hideEditRecipeModal(); // Скрываем модальное окно
     });
+}
+
+// Функция для обновления рецепта в DOM
+function updateRecipeInDOM(recipeItem, updatedRecipe) {
+    const titleElement = recipeItem.querySelector('h3');
+    const imageElement = recipeItem.querySelector('img');
+    const stepElement = recipeItem.querySelector('p');
+
+    titleElement.textContent = updatedRecipe.title;
+    imageElement.src = updatedRecipe.image_url;
+    stepElement.textContent = updatedRecipe.step;
+
+    // Вам также может понадобиться обновить ингредиенты, если они изменились
+    loadRecipeIngredients(currentRecipeId);
 }
 
 function clearRecipeForm() {

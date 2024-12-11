@@ -125,9 +125,13 @@ def add_recipe():
 @rgz.route('/rgz/rest-api/recipes/<int:id>', methods=['DELETE'])
 def delete_recipe(id):
     conn, cur = db_connect()
+    # Удаляем все ингредиенты, связанные с рецептом
+    cur.execute("DELETE FROM recipe_ingredients WHERE recipe_id = %s;", (id,))
+    # Теперь удаляем сам рецепт
     cur.execute("DELETE FROM recipes WHERE id = %s;", (id,))
     db_close(conn, cur, commit=True)
     return '', 204
+
 
 @rgz.route('/rgz/rest-api/ingredients/', methods=['GET'])
 def get_ingredients():
