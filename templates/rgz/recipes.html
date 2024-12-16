@@ -7,44 +7,62 @@
 
 
     h1 {
+        font-family: 'Georgia';
         text-align: center;
-        color: #333; /* Тёмный цвет заголовка */
-        margin-bottom: 20px;
+        margin: 20px 0;
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-family: 'Georgia';
+        text-align: center;
+        color: #555;
+        margin-top: 20px;
+        font-size: 1.5rem; /* Размер заголовка для приветственного сообщения */
+    }
+
+    .search-container {
+        max-width: 800px;
+        margin: 20px auto; /* Центрирование */
+        padding: 20px; /* Отступы */
+        background-color: #fff; /* Белый фон для контейнера */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .modal {
-        display: none;
-        z-index: 100;
+        display: none; /* Скрыто по умолчанию */
+        z-index: 1000;
         background: white;
         width: 400px;
+        max-width: 90%; /* Ограничим ширину */
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         position: fixed;
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
     }
 
     .recipe-container {
         padding: 20px;
         max-width: 800px; /* Максимальная ширина контейнера */
-        margin: 0 auto; /* Центрирование */
+        margin: 0 auto;   /* Центрирование */
         background-color: white; /* Белый фон для контейнера */
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .recipe-item {
         background-color: #fff; /* Белый фон для каждого рецепта */
-        padding: 15px;
+        padding: 20px; /* Увеличен отступ внутри рецепта */
         margin: 20px 0;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s; /* Плавный переход */
     }
-
 
     .recipe-item img {
         max-width: 100%; /* Устанавливаем максимальную ширину изображения */
@@ -52,46 +70,76 @@
         border-radius: 5px; /* Округление углов изображения */
     }
 
-    .recipe-title {
+    .recipe-item h3 {
+        font-family: 'Georgia';
+        text-align: center;
         font-size: 24px; /* Увеличенный размер заголовка */
-        color: #333; /* Темный цвет текста */
+        color: green; /* Темный цвет текста */
+        margin-bottom: 10px;
+        font-weight: bold; /* Жирный шрифт */
+    }
+
+    input, textarea, select {
+        width: calc(100% - 20px); /* Полная ширина с учетом отступов */
+        padding: 10px; 
+        border: 1px solid #ccc; 
+        border-radius: 5px; 
         margin-bottom: 10px;
     }
 
-    .recipe-step {
-        font-size: 16px; /* Размер шрифта для шагов */
+    .stepi {
+        font-size: 18px; /* Размер шрифта для шагов */
         color: #555; /* Цвет текста для шагов */
+        line-height: 1.6; /* Междустрочный интервал */
         margin: 10px 0;
     }
 
+    .ingridiki {
+        font-size: 18px; /* Размер шрифта для шагов */
+        color: #555; /* Цвет текста для шагов */
+        line-height: 1.6; /* Междустрочный интервал */
+        margin: 10px 0;
+    }
 
-    textarea {
-        width: 100%; /* Ширина текстового поля */
-        height: 100px; /* Высота текстового поля */
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
+    .ing {
+        font-family: 'Georgia';
+        font-weight: bold;
+        font-size: 18px; /* Размер шрифта для шагов */
+        color: #555; /* Цвет текста для шагов */
+        line-height: 1.6; /* Междустрочный интервал */
+        margin: 10px 0;
+    }
+
+    /* Стили для строки поиска */
+    #search-title, #search-ingredients {
+        width: calc(100% - 20px); /* Полная ширина с учетом отступов */
+        padding: 10px; /* Увеличенный внутренний отступ */
         border: 1px solid #ccc; /* Серая рамка */
+        border-radius: 5px; /* Округление */
+        margin-bottom: 10px;
+        transition: border-color 0.3s; /* Плавный переход */
     }
 
-    #search-title {
-        margin: 10px 0;
-        padding: 5px;
-        width: 200px;
+
+    select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        width: 100%; /* Полная ширина для селектора */
     }
-    
-    label {
-        margin-right: 10px;
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
     .logout-button {
         margin-top: 20px;
-        padding: 10px 20px;
         background-color: #dc3545;
-        border: none;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
     }
 
     .logout-button:hover {
@@ -114,19 +162,20 @@
     </script>
 {% endif %}
 
-<h1>Список Рецептов</h1>
+<h1 style = "text-align: center; font-family: 'Georgia';">Выпечка и десерты. 100 пошаговых рецетов</h1>
 
 <!-- Добавим форму для поиска -->
-<div>
+<div class="search-container">
+    <h3 style="font-family: 'Georgia';">Поиск рецептов</h3>
     <input type="text" id="search-title" placeholder="Поиск по названию">
     <input type="text" id="search-ingredients" placeholder="Поиск по ингредиентам (через запятую)">
     <select id="search-mode">
         <option value="all">Все ингредиенты</option>
         <option value="any">Хотя бы один ингредиент</option>
     </select>
+    
     <button onclick="performSearch()">Поиск</button>
 </div>
-
 
 <div class="recipe-container" id="recipe-list"></div>
 
@@ -136,21 +185,37 @@
 
 
 <div class="modal" id="add-recipe-modal">
-    <input type="text" id="recipe-title" placeholder="Название рецепта">
-    <textarea id="recipe-step" placeholder="Шаги приготовления"></textarea>
-    <input type="text" id="recipe-image-url" placeholder="URL изображения">
+    <h3>Добавить рецепт</h3>
+    <label for="recipe-title">Название рецепта:</label>
+    <input type="text" id="recipe-title" placeholder="Введите название рецепта">
+    
+    <label for="recipe-step">Шаги приготовления:</label>
+    <textarea id="recipe-step" placeholder="Введите шаги приготовления"></textarea>
+    
+    <label for="recipe-image-url">URL изображения:</label>
+    <input type="text" id="recipe-image-url" placeholder="Введите URL изображения">
+    
     <label for="ingredient-select">Ингредиенты:</label>
     <select id="ingredient-select" multiple></select>
+    
     <button onclick="addRecipe()">Добавить</button>
     <button onclick="hideAddRecipeModal()">Отмена</button>
 </div>
 
 <div class="modal" id="edit-recipe-modal">
-    <input type="text" id="edit-recipe-title" placeholder="Название рецепта">
-    <textarea id="edit-recipe-step" placeholder="Шаги приготовления"></textarea>
-    <input type="text" id="edit-recipe-image-url" placeholder="URL изображения">
+    <h3>Редактировать рецепт</h3>
+    <label for="edit-recipe-title">Название рецепта:</label>
+    <input type="text" id="edit-recipe-title" placeholder="Введите название рецепта">
+    
+    <label for="edit-recipe-step">Шаги приготовления:</label>
+    <textarea id="edit-recipe-step" placeholder="Введите шаги приготовления"></textarea>
+    
+    <label for="edit-recipe-image-url">URL изображения:</label>
+    <input type="text" id="edit-recipe-image-url" placeholder="Введите URL изображения">
+    
     <label for="edit-ingredient-select">Ингредиенты:</label>
     <select id="edit-ingredient-select" multiple></select>
+    
     <button onclick="updateRecipe()">Сохранить изменения</button>
     <button onclick="hideEditRecipeModal()">Отмена</button>
 </div>
@@ -160,6 +225,10 @@
     {% if login == 'admin' %} 
         <button class="logout-button" onclick="location.href='/rgz/logout'">Выход</button>
     {% endif %}
+</div>
+
+<div style = "text-align: right">
+    <a href="{{ url_for('rgz.main') }}">Вернуться к выбору роли</a>
 </div>
 
 <script src="{{ url_for('static', filename='rgz/main.js') }}"></script>

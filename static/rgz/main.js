@@ -11,8 +11,10 @@ function fillRecipeList() {
             recipeItem.innerHTML = `
                 <h3>${recipe.title}</h3>
                 <img src="${recipe.image_url}" alt="${recipe.title}" />
-                <p>${recipe.step}</p>
-                <p>Ингредиенты: <span id="recipe-${recipe.id}-ingredients"></span></p>
+                <p class = "ing">Шаги:<p>
+                <p class="stepi">${recipe.step}</p>
+                <p class = "ing">Ингредиенты:<p>
+                <p class="ingridiki"> <span id="recipe-${recipe.id}-ingredients"></span></p>
             `;
 
             // Проверка, является ли пользователь администратором
