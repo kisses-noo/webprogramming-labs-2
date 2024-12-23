@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block laba %}Лабораторная работа 8{% endblock %}
+
+{% block style %}
+        .container {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .username {
+            font-weight: bold;
+            color: #7F6C4D;
+        }
+
+        .button-container {
+            border-radius: 15px; 
+            background-color: #D68765;
+            padding: 20px; 
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .button-list {
+            list-style-type: none; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center;
+        }
+
+        .button-item {
+            margin: 0 15px;
+        }
+
+        .button-link {
+            border: 1px solid #D2B48C; 
+            border-radius: 10px; 
+            background-color: #F5DEB3; 
+            padding: 10px;
+            text-decoration: none; 
+            color: black;
+        }
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>База знаний</h1>
+    </div>
+    <p class="username">Пользователь: <span style="color: black">{{ login if login else 'anonymous' }}</span></p>
+    <div class="button-container">
+        <ol class="button-list">
+            <li class="button-item">
+                <a href="/lab8/login" class="button-link">Вход</a>
+            </li>
+            {% if login %}
+            <li class="button-item">
+                <a href="/lab8/logout" class="button-link">Выход</a>
+            </li>
+            {% endif %} 
+            <li class="button-item">
+                <a href="/lab8/register" class="button-link">Регистрация</a>
+            </li>
+            </li>
+        </ol> 
+    </div>
+{% endblock %}
