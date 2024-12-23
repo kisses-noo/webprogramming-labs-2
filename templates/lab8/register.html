@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Лабораторная работа 8{% endblock %}
 
 {% block main %}
     <hl>Регистрация</hl>
     {% if error %}
         <div style="color: red;">{{ error }}</div>
     {% endif %}
-    <form action="/lab5/register" method="post"> 
+    <form action="/lab8/register" method="post"> 
         <div>
             <label>
                 Логин: <input type="text" name="login">
