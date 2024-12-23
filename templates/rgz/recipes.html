@@ -5,7 +5,6 @@
 {% block style %}
 <style>
 
-
     h1 {
         font-family: 'Georgia';
         text-align: center;
@@ -164,7 +163,7 @@
 
 <h1 style = "text-align: center; font-family: 'Georgia';">Выпечка и десерты. 100 пошаговых рецетов</h1>
 
-<!-- Добавим форму для поиска -->
+<!-- Форма для поиска -->
 <div class="search-container">
     <h3 style="font-family: 'Georgia';">Поиск рецептов</h3>
     <input type="text" id="search-title" placeholder="Поиск по названию">
@@ -179,9 +178,11 @@
 
 <div class="recipe-container" id="recipe-list"></div>
 
-{% if login == 'admin' %}
-    <button onclick="showAddRecipeModal()">Добавить рецепт</button>
-{% endif %}
+<div style = "text-align: center;">
+    {% if login == 'admin' %}
+        <button onclick="showAddRecipeModal()">Добавить рецепт</button>
+    {% endif %}
+</div>
 
 
 <div class="modal" id="add-recipe-modal">
@@ -221,7 +222,7 @@
 </div>
 
 
-<div>
+<div style = "text-align: center;">
     {% if login == 'admin' %} 
         <button class="logout-button" onclick="location.href='/rgz/logout'">Выход</button>
     {% endif %}

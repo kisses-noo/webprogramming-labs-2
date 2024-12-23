@@ -11,9 +11,9 @@ function fillRecipeList() {
             recipeItem.innerHTML = `
                 <h3>${recipe.title}</h3>
                 <img src="${recipe.image_url}" alt="${recipe.title}" />
-                <p class = "ing">Шаги:<p>
+                <p class = "ing">Шаги:</p>
                 <p class="stepi">${recipe.step}</p>
-                <p class = "ing">Ингредиенты:<p>
+                <p class = "ing">Ингредиенты:</p>
                 <p class="ingridiki"> <span id="recipe-${recipe.id}-ingredients"></span></p>
             `;
 
@@ -43,9 +43,6 @@ function fillRecipeList() {
     })
     .catch(error => console.error('Error fetching recipes:', error));
 }
-
-
-
 
 
 function loadIngredients() {
@@ -115,7 +112,6 @@ function hideEditRecipeModal() {
     document.getElementById('edit-recipe-modal').style.display = 'none';
 }
 
-// Существующая функция addRecipe
 function addRecipe() {
     const newRecipe = {
         title: document.getElementById('recipe-title').value,
@@ -154,7 +150,7 @@ function saveRecipeIngredients(recipeId, ingredients) {
 }
 
 
-// Изменяем функцию editRecipe
+
 function editRecipe(id) {
     currentRecipeId = id; // Сохраняем ID рецепта
     fetch(`/rgz/rest-api/recipes/${id}`)
@@ -202,7 +198,7 @@ function updateRecipe() {
         }
     })
     .then(() => {
-        // Вместо перезагрузки всего списка обновляем конкретный рецепт в списке
+        // Обновляем конкретный рецепт в списке
         const recipeItem = document.getElementById(`recipe-${currentRecipeId}`);
         updateRecipeInDOM(recipeItem, updatedRecipe);
         hideEditRecipeModal(); // Скрываем модальное окно
@@ -213,15 +209,16 @@ function updateRecipe() {
 function updateRecipeInDOM(recipeItem, updatedRecipe) {
     const titleElement = recipeItem.querySelector('h3');
     const imageElement = recipeItem.querySelector('img');
-    const stepElement = recipeItem.querySelector('p');
+    const stepElement = recipeItem.querySelector('.stepi'); 
 
     titleElement.textContent = updatedRecipe.title;
     imageElement.src = updatedRecipe.image_url;
-    stepElement.textContent = updatedRecipe.step;
+    stepElement.textContent = updatedRecipe.step; // Обновляем только текст для шагов
 
-    // Вам также может понадобиться обновить ингредиенты, если они изменились
+    // Обновить ингредиенты, если они изменились
     loadRecipeIngredients(currentRecipeId);
 }
+
 
 function clearRecipeForm() {
     document.getElementById('recipe-title').value = '';
@@ -247,10 +244,10 @@ function performSearch() {
             recipeItem.innerHTML = `
                 <h3>${recipe.title}</h3>
                 <img src="${recipe.image_url}" alt="${recipe.title}" />
-                <p>${recipe.step}</p>
-                <p>Ингредиенты: <span id="recipe-${recipe.id}-ingredients"></span></p>
-                <button onclick="editRecipe(${recipe.id})">Редактировать</button>
-                <button onclick="deleteRecipe(${recipe.id})">Удалить</button>
+                <p class="ing">Шаги:</p>
+                <p class="stepi">${recipe.step}</p>
+                <p class="ing">Ингредиенты:</p>
+                <p class="ingridiki"><span id="recipe-${recipe.id}-ingredients"></span></p>
             `;
 
             // Проверка по названию
@@ -267,6 +264,24 @@ function performSearch() {
                     })) : true;
 
             if (titleMatch && ingredientMatch) {
+                // Добавляем только если пользователь администратор
+                if (isAdmin) {
+                    const editButton = document.createElement('button');
+                    editButton.innerText = 'Редактировать';
+                    editButton.onclick = function() {
+                        editRecipe(recipe.id);
+                    };
+
+                    const delButton = document.createElement('button');
+                    delButton.innerText = 'Удалить';
+                    delButton.onclick = function() {
+                        deleteRecipe(recipe.id);
+                    };
+
+                    recipeItem.appendChild(editButton);
+                    recipeItem.appendChild(delButton);
+                }
+
                 recipeList.appendChild(recipeItem);
                 loadRecipeIngredients(recipe.id); // Загрузка ингредиентов для отображения
             }
