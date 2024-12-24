@@ -1,18 +1,75 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block style %}
+    <style>
+        .container {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .article-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .article-item {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+             background-color: #f9f9f9;
+        }
+
+        .article-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .article-text {
+             text-align: left;
+            margin-top: 10px;
+             white-space: pre-line;
+        }
+
+         .article-actions {
+             text-align: center;
+            margin-top: 10px;
+         }
+
+          .button-link {
+            border: 1px solid #D2B48C;
+            border-radius: 10px;
+            background-color: #F5DEB3;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+            margin-right: 5px;
+         }
+    </style>
+{% endblock %}
 
 {% block main %}
-    <h1>Статьи</h1>
-    {% if message %}
-        <div style="color: red;">{{ message }}</div>
-    {% endif %}
-
-    {% for article in articles %}
-        <h2>{{ article['title'] }}</h2>
-        <blockquote>{{ article['article_text'] }}</blockquote>
-        <a href="/lab5/edit/{{ article['id'] }}">Редактировать</a> |
-        <a href="/lab5/delete/{{ article['id'] }}">Удалить</a>
-    {% endfor %}
-    <a href="/lab5">Перейти к базе данных</a>
+    <div class="container">
+        <h1>Список статей</h1>
+        <ul class="article-list">
+            {% for article in articles %}
+                <li class="article-item">
+                    <div class="article-title">{{ article.title }}</div>
+                    <div class="article-text">{{ article.article_text }}</div>
+                    <div class="article-actions">
+                        <a href="/lab8/articles/edit/{{ article.id }}" class="button-link">Редактировать</a>
+                        <a href="/lab8/articles/delete/{{ article.id }}" class="button-link delete-button" onclick="return confirmDelete()">Удалить</a>
+                    </div>
+                </li>
+            {% else %}
+                <li>Статей пока нет.</li>
+            {% endfor %}
+        </ul>
+        <a href="/lab8/create" class="button-link">Создать статью</a>
+    </div>
+    <script>
+        function confirmDelete() {
+             return confirm("Вы уверены, что хотите удалить статью?");
+        }
+    </script>
 {% endblock %}

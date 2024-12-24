@@ -61,6 +61,14 @@
                 <a href="/lab8/register" class="button-link">Регистрация</a>
             </li>
             </li>
+             {% if login %}
+            <li class="button-item">
+                <a href="/lab8/articles" class="button-link">Список статей</a>
+            </li>
+            <li class="button-item">
+                 <a href="/lab8/create" class="button-link">Создать статью</a>
+            </li>
+             {% endif %}
         </ol> 
     </div>
 {% endblock %}

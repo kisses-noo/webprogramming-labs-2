@@ -1,26 +1,54 @@
 {% extends "base.html" %}
-{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block style %}
+    <style>
+        .container {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 50%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .button-link {
+            border: 1px solid #D2B48C;
+            border-radius: 10px;
+            background-color: #F5DEB3;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+         }
+    </style>
+{% endblock %}
+
 {% block main %}
-    <h1>Создание статьи</h1>
-    {% if error %}
-        <div style="color: red;">{{ error }}</div>
-    {% endif %}
-    <form method="post">
-        <div>
-            <label>
-                Название статьи: <input type="text" maxlength="50" name="title">
-            </label>
-        </div>
-
-        <div>
-            <textarea name="article_text"></textarea>
-        </div>
-
-        <div>
-            <button type="submit">Готово</button>
-        </div>
-        
-    </form>
-    <a href="/lab5">Перейти к базе данных</a>
-
+    <div class="container">
+        <h1>{{ 'Редактировать' if article else 'Создать' }} статью</h1>
+        <form method="post" action="">
+            <div class="form-group">
+                <label for="title">Заголовок:</label>
+                <input type="text" name="title" id="title" value="{{ article.title if article }}" required>
+            </div>
+            <div class="form-group">
+                <label for="article_text">Текст статьи:</label>
+                <textarea name="article_text" id="article_text" rows="8" required>{{ article.article_text if article }}</textarea>
+            </div>
+             <button type="submit" class="button-link">Сохранить</button>
+        </form>
+    </div>
 {% endblock %}
