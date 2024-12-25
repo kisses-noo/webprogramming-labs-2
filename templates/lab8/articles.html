@@ -45,27 +45,43 @@
             color: black;
             margin-right: 5px;
          }
+         .search-form {
+             margin-bottom: 20px;
+         }
+        .search-input {
+             padding: 8px;
+             border: 1px solid #ddd;
+             border-radius: 4px;
+        }
     </style>
 {% endblock %}
 
 {% block main %}
     <div class="container">
         <h1>Список статей</h1>
+        <form method="post" class="search-form">
+            <input type="text" name="search" class="search-input" placeholder="Поиск..." value="{{ search_query }}">
+             <button type="submit" class="button-link">Поиск</button>
+        </form>
         <ul class="article-list">
             {% for article in articles %}
                 <li class="article-item">
                     <div class="article-title">{{ article.title }}</div>
                     <div class="article-text">{{ article.article_text }}</div>
                     <div class="article-actions">
+                        {% if current_user.is_authenticated and article.login_id == current_user.id %}
                         <a href="/lab8/articles/edit/{{ article.id }}" class="button-link">Редактировать</a>
-                        <a href="/lab8/articles/delete/{{ article.id }}" class="button-link delete-button" onclick="return confirmDelete()">Удалить</a>
+                         <a href="/lab8/articles/delete/{{ article.id }}" class="button-link delete-button" onclick="return confirmDelete()">Удалить</a>
+                        {% endif %}
                     </div>
                 </li>
             {% else %}
                 <li>Статей пока нет.</li>
             {% endfor %}
         </ul>
-        <a href="/lab8/create" class="button-link">Создать статью</a>
+          {% if current_user.is_authenticated %}
+         <a href="/lab8/create" class="button-link">Создать статью</a>
+          {% endif %}
     </div>
     <script>
         function confirmDelete() {

@@ -41,6 +41,8 @@ def login():
     
     login_form = request.form.get('login')
     password_form = request.form.get('password')
+     
+    remember = request.form.get('remember')
     
     user = users.query.filter_by(login = login_form).first()
     if not login_form or not password_form:
@@ -48,16 +50,47 @@ def login():
     
     if user:
         if check_password_hash(user.password, password_form):
-            login_user(user, remember= False)
+            login_user(user, remember= remember)
             return redirect('/lab8')
 
     return render_template('/lab8/login.html', error = 'Ошибка входа: логин и/или пароль неверны')
 
-@lab8.route('/lab8/articles/')
-@login_required
+@lab8.route('/lab8/articles/', methods = ['GET', 'POST'])
 def article_list():
-    user_articles = articles.query.filter_by(login_id = current_user.id).all()
-    return render_template('lab8/articles.html', articles = user_articles)
+    search_query = request.form.get('search', '')
+    if current_user.is_authenticated:
+      user_articles = articles.query.filter(
+            or_(
+                articles.login_id == current_user.id,
+                articles.is_public == True
+            ),
+            or_(
+               articles.title.contains(search_query),
+                              articles.article_text.contains(search_query)
+           )
+       ).all()
+    else:
+       user_articles = articles.query.filter(
+            articles.is_public == True,
+            or_(
+               articles.title.contains(search_query),
+               articles.article_text.contains(search_query)
+           )
+           ).all()
+    return render_template('lab8/articles.html', articles = user_articles, search_query = search_query)
+
+
+@lab8.route('/lab8/public-articles/', methods = ['GET', 'POST'])
+def public_articles():
+    search_query = request.form.get('search', '')
+    public_articles_list = articles.query.filter(
+       articles.is_public == True,
+            or_(
+               articles.title.contains(search_query),
+               articles.article_text.contains(search_query)
+           )
+    ).all()
+    return render_template('lab8/articles.html', articles = public_articles_list, search_query = search_query)
 
 @lab8.route('/lab8/create/', methods = ['GET', 'POST'])
 @login_required
@@ -67,8 +100,9 @@ def create_article():
 
     title_form = request.form.get('title')
     text_form = request.form.get('article_text')
-   
-    new_article = articles(login_id = current_user.id, title = title_form, article_text = text_form, likes = 0, is_public=False, is_favorite = False )
+    is_public_form = bool(request.form.get('is_public'))
+
+    new_article = articles(login_id = current_user.id, title = title_form, article_text = text_form, likes = 0, is_public=is_public_form, is_favorite = False )
     db.session.add(new_article)
     db.session.commit()
     return redirect('/lab8/articles/')
@@ -87,9 +121,11 @@ def edit_article(article_id):
 
     title_form = request.form.get('title')
     text_form = request.form.get('article_text')
+    is_public_form = bool(request.form.get('is_public'))
 
     article.title = title_form
     article.article_text = text_form
+    article.is_public = is_public_form
     db.session.commit()
     return redirect('/lab8/articles/')
 

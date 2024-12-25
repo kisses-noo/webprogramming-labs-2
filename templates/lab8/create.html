@@ -24,6 +24,16 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .public-group {
+            display: flex;
+            align-items: center;
+             width: 50%;
+             margin-left: auto;
+            margin-right: auto;
+        }
+         .public-group label {
+           margin-right: 5px;
+         }
 
         .button-link {
             border: 1px solid #D2B48C;
@@ -48,7 +58,14 @@
                 <label for="article_text">Текст статьи:</label>
                 <textarea name="article_text" id="article_text" rows="8" required>{{ article.article_text if article }}</textarea>
             </div>
+            <div class="form-group">
+             <div class="public-group">
+                <label for="is_public">Публичная:</label>
+                <input type="checkbox" name="is_public" id="is_public" {% if article and article.is_public %}checked{% endif %}>
+              </div>
+            </div>
              <button type="submit" class="button-link">Сохранить</button>
         </form>
     </div>
 {% endblock %}
+
