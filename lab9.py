@@ -1,13 +1,19 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 
 lab9 = Blueprint('lab9', __name__)
 
 @lab9.route('/lab9', methods=['GET', 'POST'])
 def main():
+    # Проверяем, есть ли поздравление в сессии
+    greeting = session.get('greeting')
+    gift_image = session.get('gift_image')
+
     if request.method == 'POST':
-        name = request.form.get('name')
-        return redirect(url_for('lab9.age', name=name))
-    return render_template('lab9/lab9.html')
+        # Сброс данных
+        session.clear()  # Очищаем сессию
+        return redirect(url_for('lab9.main'))  # Возврат на форму
+
+    return render_template('lab9/lab9.html', greeting=greeting, gift_image=gift_image)
 
 @lab9.route('/lab9/age', methods=['GET', 'POST'])
 def age():
@@ -72,5 +78,9 @@ def congratulation():
         gift_image = "candies.jpg" if sub_like == "сладкое" else "hearty.jpeg"
     else:
         gift_image = "flowers.jpg" if sub_like == "нежное" else "art.jpg"
+
+    # Сохраняем поздравление и изображение в сессию
+    session['greeting'] = greeting
+    session['gift_image'] = gift_image
 
     return render_template('lab9/congratulation.html', greeting=greeting, gift_image=gift_image, age=age)
