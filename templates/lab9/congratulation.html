@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block laba %}Лабораторная работа 9{% endblock %}
-
 {% block script %}
 <style>
 
@@ -10,6 +8,29 @@ h1 {
     text-align: center;
     margin-top: 20px;
     font-size: 30px;
+}
+
+img {
+    display: block;
+    width: 500px;
+    height: auto;
+    margin: 20px auto;
+    border: 5px solid #c0392b;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.congratulations {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2ecc71;
+    text-align: center;
+    margin: 20px;
+    padding: 15px;
+    border: 2px dashed #2980b9;
+    border-radius: 10px;
+    background-color: #ecf0f1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 button {
@@ -48,10 +69,7 @@ header {
 {% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
-    <form method="post">
-        <label for="name">Введите ваше имя:</label>
-        <input type="text" name="name" required>
-        <button type="submit">Далее</button>
-    </form>
+    <h1>Поздравления!</h1>
+    <p class="congratulations">{{ greeting }}</p>
+    <img src="{{ url_for('static', filename='lab9/' + gift_image) }}" alt="Подарок">
 {% endblock %}

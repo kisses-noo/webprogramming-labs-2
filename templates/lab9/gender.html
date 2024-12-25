@@ -48,10 +48,10 @@ header {
 {% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <h1>Выберите пол для {{ name }}</h1>
     <form method="post">
-        <label for="name">Введите ваше имя:</label>
-        <input type="text" name="name" required>
+        <input type="radio" name="gender" value="male" required> Мужчина<br>
+        <input type="radio" name="gender" value="female"> Женщина<br>
         <button type="submit">Далее</button>
     </form>
 {% endblock %}

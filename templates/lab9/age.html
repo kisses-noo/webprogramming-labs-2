@@ -48,10 +48,10 @@ header {
 {% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <h1>{{ name }}, введите ваш возраст</h1>
     <form method="post">
-        <label for="name">Введите ваше имя:</label>
-        <input type="text" name="name" required>
+        <label for="age">Ваш возраст:</label>
+        <input type="number" name="age" required>
         <button type="submit">Далее</button>
     </form>
 {% endblock %}

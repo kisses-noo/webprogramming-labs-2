@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block laba %}Лабораторная работа 9{% endblock %}
-
 {% block script %}
 <style>
 
@@ -48,10 +46,10 @@ header {
 {% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <h1>Что вам больше нравится, {{ name }}?</h1>
     <form method="post">
-        <label for="name">Введите ваше имя:</label>
-        <input type="text" name="name" required>
+        <input type="radio" name="like" value="вкусное" required> Что-то вкусное<br>
+        <input type="radio" name="like" value="красивое"> Что-то красивое<br>
         <button type="submit">Далее</button>
     </form>
 {% endblock %}

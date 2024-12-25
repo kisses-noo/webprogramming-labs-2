@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% block laba %}Лабораторная работа 9{% endblock %}
-
 {% block script %}
 <style>
 
@@ -48,10 +46,15 @@ header {
 {% endblock %}
 
 {% block main %}
-    <h1>Поздравления</h1>
+    <h1>Если вам нравится {{ like }}, что вы предпочитаете?</h1>
     <form method="post">
-        <label for="name">Введите ваше имя:</label>
-        <input type="text" name="name" required>
+        {% if like == 'вкусное' %}
+            <input type="radio" name="sub_like" value="сладкое" required> Сладкое<br>
+            <input type="radio" name="sub_like" value="сытное"> Сытное<br>
+        {% else %}
+            <input type="radio" name="sub_like" value="нежное" required> Нежное<br>
+            <input type="radio" name="sub_like" value="необычное"> Необычное<br>
+        {% endif %}
         <button type="submit">Далее</button>
     </form>
 {% endblock %}
